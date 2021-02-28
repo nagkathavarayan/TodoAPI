@@ -2,7 +2,7 @@
 # Build and test ASP.NET Core projects targeting .NET Core.
 # Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
+# https://www.youtube.com/watch?v=SOtC1VLZKm4
 trigger:
   - main
 
@@ -34,7 +34,7 @@ steps:
   #     arguments: "--configuration $(buildConfiguration)"
 
   - task: DotNetCoreCLI@2
-    displayName: "dotnet test"
+    displayName: "Run Tests"
     inputs:
       command: "test"
       arguments: "--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/"

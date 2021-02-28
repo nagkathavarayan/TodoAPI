@@ -29,8 +29,22 @@ namespace TodoAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var allowedOrigins = Configuration.GetValue<string>("AllowedOrigins")?.Split(",") ?? new string[0];
+            // services.AddCors(opt => opt.AddPolicy("AllowEverything", builder => builder.AllowAnyOrigin()
+            //                                                                            .AllowAnyMethod()
+            //                                                                            .AllowAnyHeader()));
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("nagInternal", builder => builder.WithOrigins(allowedOrigins)
+                                                                .AllowAnyHeader()
+                                                                .SetPreflightMaxAge(TimeSpan.FromMinutes(1)));
+                opt.AddPolicy("PublicApi", builder => builder.AllowAnyOrigin().WithMethods("Get").WithHeaders("Content-Type"));
+            });
+
             services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("TodoList"));
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -49,9 +63,8 @@ namespace TodoAPI
             }
 
             // app.UseHttpsRedirection();
-
             app.UseRouting();
-
+            app.UseCors("nagInternal"); // between Routing and UseAuthorization
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

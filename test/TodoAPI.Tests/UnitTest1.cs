@@ -9,6 +9,7 @@ namespace TodoAPI.Tests
     public class UnitTest1
     {
         WeatherForecastController controller = new WeatherForecastController();
+
         [Fact]
         public void Weather()
         {
